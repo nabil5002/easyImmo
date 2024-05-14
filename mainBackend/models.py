@@ -1,9 +1,13 @@
 from django.db import models
+from multiupload.fields import MultiImageField,MultiFileField
+from django.core.validators import FileExtensionValidator
+
 
 # Create your models here.
 
-class Operation(models.Model):
-    PropertyId = models.AutoField(primary_key=True)
+class Operation(models.Model): 
+    PropertyId = models.ForeignKey("Property",on_delete=models.DO_NOTHING)
+
 
     def __str__(self):
         pass
@@ -39,9 +43,13 @@ class Rental(Operation):
         verbose_name_plural = 'Rentals'
 
 class Property(models.Model):
-    Propertype = models.CharField(max_length=30)
+    OwnerId = models.ForeignKey("Owner",on_delete=models.CASCADE)
+    PropertyType = models.CharField(max_length=30)
+    PropertyImages = models.FileField(upload_to='property_files/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])], blank=True, null=True)
     PropertyName = models.CharField(max_length=50)
     PropertyLocation = models.CharField(max_length=50)
+
+
 
     def __str__(self):
         pass
@@ -122,12 +130,13 @@ class EvaluateProperty(models.Model):
 
 class User(models.Model):
     UserId = models.AutoField(primary_key=True)
-    FullName = models.CharField(max_length=50)
-    UserProfilePhoto = models.FileField(upload_to="")
+    SureName = models.CharField(max_length=50)
+    firstName = models.CharField(max_length=50)
+    UserProfilePhoto = models.FileField(upload_to='property_files/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])], blank=True, null=True)
     UserPwd = models.CharField(max_length=50)
     UserMail  = models.EmailField()
     UserNumber = models.IntegerField()
-    # UserUplaod = models.Multiple
+    UserRequiresUplaod = models.FileField(upload_to='property_files/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png', 'pdf','doc'])], blank=True, null=True)
     
     def __str__(self):
         pass
