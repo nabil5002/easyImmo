@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,6 +44,8 @@ INSTALLED_APPS = [
     'userFrontend',
     'mainBackend',
 ]
+
+AUTH_USER_MODEL = 'mainBackend.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,16 +81,24 @@ WSGI_APPLICATION = 'GestionImmo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "immo_manage",
-        "USER": "postgres",
-        "PASSWORD": "NABIL2005",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "immo_manage",
+#         "USER": "postgres",
+#         "PASSWORD": "NABIL2005",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
@@ -108,6 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -123,12 +136,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIR = [
-    os.path.join(BASE_DIR,'static'),
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+STATIC_URL = '/static/'
+# MEDIA_URL = ''
+MEDIA_ROOT = os.path.join(BASE_DIR,'property_files')
+
+# Liste des répertoires statiques supplémentaires
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'adminFrontend', 'static'),  # Chemin vers le premier dossier statique
+    os.path.join(BASE_DIR,'userFrontend', 'userstatic'),  # Chemin vers le deuxième dossier statique
 ]
+
+# Répertoire où collecter les fichiers statiques
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+LOGIN_URL = '/login'
+
+LOGOUT_REDIRECT_URL = '/login'
